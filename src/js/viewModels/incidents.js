@@ -12,7 +12,7 @@
 define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'ojs/ojcontext', 'jquery', 'ojs/ojanimation', 'ojs/ojarraydataprovider', 'text!../datacontent/data.json', 'ojs/ojasyncvalidator-regexp', 'ojs/ojknockout', 'ojs/ojinputsearch', 'ojs/ojhighlighttext',
     , 'ojs/ojpopup', 'ojs/ojlistview', 'ojs/ojlistitemlayout', 'ojs/ojradioset', 'ojs/ojbutton',
     'ojs/ojtrain', 'ojs/ojlabel', 'ojs/ojinputtext', 'ojs/ojvalidationgroup',
-    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter'],
+    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages'],
 
   function (ko,app,moduleUtils,accUtils,Context,$,AnimationUtils, ArrayDataProvider, employeeData, AsyncRegExpValidator) {
 
@@ -56,6 +56,9 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     keyAttributes: "OrganizationName",
                     textFilterAttributes: [],
                 });
+                monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
                // self.router = params.parentRouter;
 
                 /*this.suggestionsDP = () => {
@@ -93,18 +96,22 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     var date = new Date();
                     return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
                 };
-
-
-                /*  $.getJSON(url).then(function(data) {
-                    var activitiesArray = data;
-          
-                    /*$.each(activitiesArray.NextVisit, function (r) {
-                      this.NextVisit = new Date(this.NextVisit);
-                  });
-                    console.log(activitiesArray);
-                    self.activityDataProvider(new ArrayDataProvider(activitiesArray, { keyAttributes: 'SyncLocalId'}));
-                  });*/
-
+                onLoadAccountRecords = () =>{
+                    $.getJSON(url).then(function(data) {
+                        var activitiesArray2 = data.filter(element => element.SalesProfileStatus)
+                        var resultData = JSON.stringify(activitiesArray2);
+                        var _resultobj = JSON.parse(resultData, function (key, value) {
+                            if (key == "LastVisit" || key == "NextVisit") {
+                                var formateddate_value = monthShortNames[new Date(value).getMonth()] + ' ' + new Date(value).getDate() + '  ' + new Date(value).getFullYear();
+                                return formateddate_value;
+                            } else {
+                                return value;
+                            }
+                        });
+                        self.activityDataProvider(new ArrayDataProvider(_resultobj, { keyAttributes: 'SyncLocalId' }));
+                            });
+                };
+                onLoadAccountRecords();
                 this.startAnimationListener = (event) => {
                     let ui = event.detail;
                     if (event.target.id !== "popup1") {
@@ -122,14 +129,13 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                 };
                 this.currentColor = ko.observable("");
                 this.name = ko.observable('Adam Fripp');
-                self.selectedvaluelength = ko.observable("0");
+                self.selectedvaluelength = ko.observable("");
+                self.selectedvaluetype=ko.observable("Total");
                 this.applyFilterValues = () => {
                     this.selectedvalue = ko.observable("");
                     selectedvalue = this.currentColor._latestValue;
+
                     $.getJSON(url).then(function (data) {
-                        monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                        ];
                         var activitiesArray1 = data.filter(element => element.SalesProfileStatus == selectedvalue)
                         var result = JSON.stringify(activitiesArray1);
                         var obj = JSON.parse(result, function (key, value) {
@@ -146,6 +152,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         //  console.log(selectedvaluelength);
                         //this.selectedvaluelength = ko.observable("SATISH");
                         self.selectedvaluelength(activitiesArray1.length);
+                        self.selectedvaluetype(self.currentColor._latestValue);
 
 
                     });
@@ -222,7 +229,6 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                 this.telephoneNumber = ko.observable();
                 this.isChecked = ko.observable(false);
                 this.valueActionEventData = ko.observable();
-
                 this.isFormReadonly = ko.observable(false);
                 this.stepArray = ko.observableArray([
                     { label: "Basic Information", id: "stp1" },
@@ -271,6 +277,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         return;
                     }
                 };
+      // Updating train label values
                 this.updateLabelText = (event) => {
                     var train = document.getElementById("train");
                     let selectedStep = train.getStep(event.detail.value);
@@ -290,6 +297,10 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         this.isFormReadonly(true);
                     }
                 };
+
+             
+
+        //saved form data in localstorage        
                 this.saveLocalStorage = (event) => {
                     var train = document.getElementById("train");
                     let finalStep = train.getStep("stp3");
@@ -305,17 +316,31 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     this.name = ko.observable();
                     this.email = ko.observable();
                     this.telephoneNumber = ko.observable();
+            //Toaster
+             /*const isoTimeNow = new Date().toISOString();
+              const isoTimeYesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+              this.messages = [
+                
+                  {
+                      severity: "confirmation",
+                      summary: "saved Successfully in localstorage",
+                      timestamp: isoTimeYesterday,
+                  },
+                  {
+                      severity: "info",
+                      summary: "Info message summary no detail",
+                  },
+              ];
+              this.messagesDataprovider = new ArrayDataProvider(this.messages);*/
                     window.location.href = window.location.origin;
                 };
-
+  // details page link
                 openArrowListener = (event) => {
                     // oj.Router.rootInstance.go('/dashboard');
                   //  alert(event);
                   this.router.rootInstance.go({ path: 'accountlist', params: { name: 'Account List' } })
                   //  router.go({path:'dashboard',params:{}})
-
                 //  router.go({path:'dashboard',params: { name: 'Dashboard' } })
-
                 };
                 openListener = (event) => {
                     let popup = document.getElementById("popup1");
@@ -333,6 +358,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     let popup = document.getElementById("popup2");
                     popup.close();
                 }
+               
             
 
       };
