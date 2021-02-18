@@ -1,0 +1,257 @@
+<!--
+ Copyright (c) 2014, 2021, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+
+
+ <div class="demo-flex-display">
+
+  <!--Title block-->
+  <div class="oj-flex oj-sm-flex-items-initial
+              oj-sm-justify-content-center">
+    <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+      <h6 id="h6" slot="header" style="color:#367588;">Accounts List
+    </div>
+    </h6>
+  </div>
+
+  <!--Search block-->
+  <div class="oj-flex oj-sm-flex-items-initial ">
+    <oj-input-search id="search1" class="oj-form-control-full-width" suggestions="[[suggestionsDP]]"
+      suggestion-item-text="OrganizationName" value="{{value}}" raw-value="{{rawValue}}"
+      on-oj-value-action="[[handleValueAction]]" placeholder="Search accounts" aria-label="My search field">
+      <template slot="suggestionItemTemplate">
+        <oj-highlight-text text='[[$current.data.OrganizationName]]' match-text='[[$current.searchText]]'>
+        </oj-highlight-text>
+
+        <!--<oj-highlight-text
+          text='[[$current.data.PartyNumber + ", " + $current.data.OrganizationName]]'
+          match-text='[[$current.searchText]]'></oj-highlight-text>-->
+      </template>
+    </oj-input-search>
+  </div>
+
+  <!--Filter block-->
+  <div class="oj-flex oj-sm-flex-items-initial oj-typography-semi-bold">
+    <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-typography-semi-bold">
+      <h6 id="h6" slot="header" class="oj-typography-semi-bold" style="color:#367588;">
+        <oj-bind-text value="{{selectedvaluelength}}"></oj-bind-text> active accounts</h6>
+    </div>
+    <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-helper-margin-start-auto oj-sm-margin-4x-top
+    ">
+      <oj-button id="btnGo" display='icons' on-oj-action="[[openListener]]">
+        Filter
+        <span slot='startIcon' class="oj-ux-ico-filter  oj-icon-color-primary" chroming="borderless"></span>
+      </oj-button>
+
+      <!--model popup-->
+      <div id="popupWrapper">
+        <oj-popup id="popup1" class="demo-popup" tail="none" position.my.horizontal="center"
+          position.my.vertical="center" position.at.horizontal="center" position.at.vertical="center"
+          position.of="window" position.offset.y="-10" modality="modal" on-oj-animate-start="[[startAnimationListener]]"
+          style="text-align:center;color:#367588;">
+          <!--popup body-->
+          <div class="demo-popup-body">
+            <div class="demo-popup-header">
+              <div class="oj-flex oj-sm-flex-items-initial oj-sm-justify-content-space-between">
+                <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+                  <oj-button id="btnCancel" class="oj-icon-color-primary" display='icons' chroming="borderless"
+                    on-oj-action="[[cancelListener]]">
+                    <span slot='startIcon'
+                      class="oj-ux-ico-close oj-icon-color-primary oj-text-color-standalone"></span>
+                  </oj-button>
+                </div>
+                <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+                  <h6 id="h6" slot="header" class="oj-typography-semi-bold">
+                    Filters</h6>
+                </div>
+                <div class="oj-flex-item oj-sm-padding-2x-horizontal"></div>
+              </div>
+            </div>
+
+            <!--popup Content-->
+            <div class="demo-popup-content" style="min-height: 360px;min-width:360px;">
+              <div id="formId">
+                <oj-radioset id="radiosetBasicDemoId" label-hint="Account type" label-edge="inside"
+                  value="{{currentColor}}">
+                  <!-- This is an example of how to use oj-bind-for-each, along with oj-bind-text to 
+                        iterate over an array of objects-->
+                  <oj-bind-for-each data="[[accountTypeOptions]]">
+                    <template>
+                      <oj-option value="[[$current.data.value]]">
+                        <oj-bind-text value="[[$current.data.accounttype]]"></oj-bind-text>
+                      </oj-option>
+                    </template>
+                  </oj-bind-for-each>
+                </oj-radioset>
+
+                <!--<div class="oj-sm-margin-3x-vertical">
+                  <oj-label-value>
+                    <oj-label slot="label">Current component value is</oj-label>
+                    <span slot="value">
+                      <oj-bind-text value="[[currentColor]]"></oj-bind-text>
+                    </span>
+                  </oj-label-value>
+                </div>-->
+              </div>
+            </div>
+            <!--popup Footer-->
+            <div class="demo-popup-footer">
+              <div class="oj-flex oj-sm-flex-items-initial oj-sm-justify-content-center">
+                <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+                  <oj-button on-oj-action="[[setCurrentColorToNull]]" class='oj-button-lg'>Clear All</oj-button>
+                </div>
+                <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+                  <oj-button id="inputButton" on-oj-action="[[applyFilterValues]]"
+                    class='demo-button-purple oj-button-lg' chroming='solid'>Apply Filter</oj-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </oj-popup>
+      </div>
+    </div>
+  </div>
+
+  <!--input search filter block-->
+  <div class="oj-flex oj-sm-flex-items-initial">
+    <!--<div class="oj-sm-margin-4x-bottom">
+        
+        <div>Raw value:&nbsp;&nbsp;
+          <oj-bind-text value="[[rawValue]]"></oj-bind-text>
+        </div>
+        <div>ValueAction event search term:&nbsp;&nbsp;
+          <oj-bind-text value="[[searchTerm]]"></oj-bind-text>
+        </div>
+        <div>ValueAction event item context:&nbsp;&nbsp;
+          <oj-bind-text value="[[searchItemContext]]"></oj-bind-text>
+        </div>
+        <div>ValueAction event previous search term:&nbsp;&nbsp;
+          <oj-bind-text value="[[previousSearchTerm]]"></oj-bind-text>
+        </div>
+        <div>ValueAction event last received:&nbsp;&nbsp;
+          <oj-bind-text value="[[searchTimeStamp]]"></oj-bind-text>
+        </div>
+      </div>-->
+
+    <!--<div>Value:&nbsp;&nbsp;
+          <oj-bind-text value="[[value]]"></oj-bind-text>
+        </div>
+
+        <oj-bind-text value="[[activityDataProvider]]"></oj-bind-text>-->
+
+    <!--Filter List View-->
+
+    <div class="oj-flex oj-sm-flex-items-initial oj-typography-bold oj-sm-justify-content-space-between oj-sm-align-items-center" style="color:#367588 ;font-size: 14px;">
+      <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+        Account Name
+      </div>
+      <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+        LastVisit
+      </div>
+      <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+        NextVisit
+      </div>
+    </div>
+    <oj-list-view id="activitiesList" class="oj-group-header-lg oj-listview-full-width" style="color:#367588 ;width: 100%;" data="[[activityDataProvider]]">
+      <template slot="itemTemplate">
+        <div class="oj-flex oj-sm-flex-items-initial oj-typography-semi-bold oj-sm-justify-content-space-between oj-sm-align-items-center"
+          style="color:#367588 ;border-bottom: 1px solid silver;font-size: 14px;">
+          <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+            <oj-bind-text value="[[$current.data.OrganizationName]]"></oj-bind-text>
+          </div>
+          <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+            <oj-bind-text value="[[$current.data.LastVisit]]"></oj-bind-text><br>
+          </div>
+          <div class="oj-flex-item oj-sm-padding-2x-horizontal oj-sm-flex-1">
+            <oj-bind-text value="[[$current.data.NextVisit]]"></oj-bind-text>
+          </div>
+          <div class="oj-flex-item oj-sm-padding-2x-horizontal">
+            <oj-button id="btnGo" display='icons' on-oj-action="[[openArrowListener]]" chroming="borderless">
+              <span slot='startIcon' class="oj-ux-ico-arrow-right oj-icon-color-info"></span>
+            </oj-button>
+          </div>
+        </div>
+      </template>
+    </oj-list-view>
+  </div>
+</div>
+</div>
+
+  <!--addd account popup-->
+<oj-popup id="popup2" class="demo-popup" tail="none" position.my.horizontal="center" position.my.vertical="bottom"
+  position.at.horizontal="center" position.at.vertical="bottom" position.of="window" position.offset.y="0"
+  modality="modal" on-oj-animate-start="[[startAnimationListener]]">
+  <div class="demo-popup-body">
+    <div class="demo-popup-header">
+      <h5>Add Account</h5>
+    </div>
+    <div class="demo-popup-content" style="min-height: 500px;">
+      <div id="train-container" class="oj-sm-margin-2x">
+        <oj-train id="train" class="oj-train-stretch" on-selected-step-changed="[[updateLabelText]]"
+          on-oj-before-select="[[validate]]" selected-step="{{selectedStepValue}}" steps="[[stepArray]]">
+        </oj-train>
+        <div class="oj-sm-margin-4x-vertical">
+          <h3 class="oj-header-border">
+            <oj-bind-text value="[[selectedStepLabel()]]"></oj-bind-text>
+          </h3>
+        </div>
+        <oj-label label-id="grouplabelid">
+          <oj-bind-text value="[[selectedStepFormLabel()]]"></oj-bind-text>
+        </oj-label>
+        <oj-validation-group id="tracker" role="group" aria-labelledby="grouplabelid" labelled-by="mainlabelid">
+          <oj-bind-if test="[[selectedStepValue() === 'stp1'|| selectedStepValue() === 'stp3']]">
+            <oj-form-layout id="fl1" readonly="[[isFormReadonly()]]">
+              <oj-input-text required id="firstfieldid" value="{{name}}" autocomplete="off" label-hint="Name"
+                validators="[[[regExpValidator]]]">
+              </oj-input-text>
+              <oj-select-single data="[[browsersDP]]" label-hint="Select Item">
+              </oj-select-single>
+              <oj-select-single data="[[browsersDP2]]" label-hint="Select Item">
+              </oj-select-single>
+              <oj-radioset id="rowDirectionEnabledRadioset" value="laptop" class='oj-choice-direction-row'
+                label-hint="Class">
+                <oj-option value="wholeSale">WholeSale</oj-option>
+                <oj-option value="wholesaleretail">Wholesale-Retail</oj-option>
+                <oj-option value="retail">Retail</oj-option>
+              </oj-radioset>
+            </oj-form-layout>
+          </oj-bind-if>
+          <oj-bind-if test="[[selectedStepValue() === 'stp2'|| selectedStepValue() === 'stp3']]">
+            <oj-form-layout id="fl2" readonly="[[isFormReadonly()]]">
+              <oj-input-text required id="firstfield1" value="{{selectedStepFormaddress}}" autocomplete="off"
+                label-hint="Addrees Line1" validators="[[[regExpValidator]]]">
+              </oj-input-text>
+              <oj-input-text required id="secondfieldid" value="{{email}}" autocomplete="off" label-hint="Email"
+                validators="[[[emailRegExpValidator]]]">
+              </oj-input-text>
+              <oj-input-text required id="thirdfieldid" value="{{telephoneNumber}}" autocomplete="off"
+                label-hint="Telephone Number">
+              </oj-input-text>
+              <oj-switch label-hint="contact status"></oj-switch>
+            </oj-form-layout>
+          </oj-bind-if>
+        </oj-validation-group>
+        <oj-bind-if test="[[selectedStepValue() === 'stp3']]">
+          <div class="oj-flex-bar oj-sm-margin-4x-vertical">
+            <oj-button id="confirmBtn" class="oj-flex-bar-end demo-button-purple" chroming='solid'
+              on-oj-action="[[saveLocalStorage]]">
+              Save
+            </oj-button>
+          </div>
+        </oj-bind-if>
+      </div>
+    </div>
+    <div class="demo-popup-footer">
+      <oj-button id="btnCancel" on-oj-action="[[cancelListenerNewAccount]]">
+        Cancel
+      </oj-button>
+    </div>
+  </div>
+</oj-popup>
+<oj-button id="icon_button2" on-oj-action="[[openAddNewAccount]]" class='demo-button-purple' chroming='solid'
+  style="position:fixed;right:5%;bottom:2%;z-index: 999;">
+  <span slot='startIcon' class="oj-ux-ico-avatar"></span>
+  Add New
+</oj-button>
