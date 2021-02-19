@@ -59,6 +59,9 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                 monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             ];
+            clearFilter=document.getElementById('clear-filter');
+            clearFilter.style.display="none";
+            //clearFilter="none";
                // self.router = params.parentRouter;
 
                 /*this.suggestionsDP = () => {
@@ -89,9 +92,9 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     this.searchItemContext(this._trimItemContext(detail.itemContext));
                     this.previousSearchTerm(detail.previousValue);
                     this.searchTimeStamp(eventTime);
+
                 };
                 this._trimItemContext = (itemContext) => {
-                   
                     var searchItemContext = null;
                     if (itemContext) {
                         searchItemContext = {
@@ -171,6 +174,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
 
                     });
                     //this.selectedvaluelength = ko.observable("43");
+                    clearFilter.style.display="block";
 
                 };
                 this.setCurrentColorToNull = () => {
@@ -356,9 +360,16 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                   //  router.go({path:'dashboard',params:{}})
                 //  router.go({path:'dashboard',params: { name: 'Dashboard' } })
                 };
+                clearfilterAction = (event) => {
+                    clearFilter.style.display="none";
+                    window.location.href = window.location.origin;
+
+                };
                 openListener = (event) => {
                     let popup = document.getElementById("popup1");
                     popup.open("#btnGo");
+                    clearFilter.style.display="none";
+
                 };
                 cancelListener = (event) => {
                     let popup = document.getElementById("popup1");
