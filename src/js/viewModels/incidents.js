@@ -43,7 +43,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
         accUtils.announce('Incidents page loaded.', 'assertive');
         document.title = "Incidents";
         // Implement further logic if needed
-        this.value = ko.observable();
+                this.value = ko.observable();
                 this.rawValue = ko.observable();
                 this.searchTerm = ko.observable();
                 this.searchItemContext = ko.observable();
@@ -69,15 +69,29 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     //this.selectedvaluelength = ko.observable("43");
 
                 };*/
+        //serach filter records
                 this.handleValueAction = (event) => {
                     var detail = event.detail;
                     var eventTime = this._getCurrentTime();
                     this.searchTerm(detail.value);
+                    $.getJSON(url).then(function (data) {
+                        var activitiesArray3 = data.filter(element => element.OrganizationName == detail.value)
+                        var result3 = JSON.stringify(activitiesArray3);
+                        var obj3 = JSON.parse(result3, function (key, value) {
+                            if (key == "LastVisit" || key == "NextVisit") {                                var formateddate = monthShortNames[new Date(value).getMonth()] + ' ' + new Date(value).getDate() + '  ' + new Date(value).getFullYear();
+                                return formateddate;
+                            } else {
+                                return value;
+                            }
+                        });
+                        self.activityDataProvider(new ArrayDataProvider(obj3, { keyAttributes: 'SyncLocalId' }));
+                    });
                     this.searchItemContext(this._trimItemContext(detail.itemContext));
                     this.previousSearchTerm(detail.previousValue);
                     this.searchTimeStamp(eventTime);
                 };
                 this._trimItemContext = (itemContext) => {
+                   
                     var searchItemContext = null;
                     if (itemContext) {
                         searchItemContext = {
