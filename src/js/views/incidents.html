@@ -64,7 +64,7 @@
     ">
               <oj-button id="btnGo" display='icons' on-oj-action="[[openListener]]">
                 Filter
-                <span slot='startIcon' class="oj-ux-ico-filter  oj-icon-color-primary" chroming="borderless"></span>
+                <span slot='startIcon' class="oj-ux-ico-filter-2  oj-icon-color-primary" chroming="borderless"></span>
               </oj-button>
 
           <!--model popup-->
@@ -241,6 +241,11 @@
           </div>
         </div>
       </oj-popup>
+      <oj-button id="clear-filter"  on-oj-action="[[clearfilterAction]]" class='demo-button-purple' chroming='solid'
+        style="position:fixed;left:5%;bottom:2%;z-index: 999;">
+        <span slot='startIcon' class="oj-ux-ico-avatar"></span>
+        Clear Filter
+      </oj-button>
       <oj-button id="icon_button2" on-oj-action="[[openAddNewAccount]]" class='demo-button-purple' chroming='solid'
         style="position:fixed;right:5%;bottom:2%;z-index: 999;">
         <span slot='startIcon' class="oj-ux-ico-avatar"></span>
