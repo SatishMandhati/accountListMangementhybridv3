@@ -162,6 +162,8 @@
                     <oj-button id="btnGo" display='icons' on-oj-action="[[openArrowListener]]" chroming="borderless">
                       <span slot='startIcon' class="oj-ux-ico-arrow-right oj-icon-color-info"></span>
                     </oj-button>
+
+                    
                   </div>
                 </div>
               </template>
@@ -220,6 +222,13 @@
                     <oj-input-text required id="thirdfieldid" value="{{telephoneNumber}}" autocomplete="off"
                       label-hint="Telephone Number">
                     </oj-input-text>
+                    
+
+
+<oj-button id="findContact" class="oj-flex-bar-start demo-button-purple" chroming='solid'
+                    on-oj-action="[[importContact]]">
+                    Select Contact
+                  </oj-button>
                     <oj-switch label-hint="contact status"></oj-switch>
                   </oj-form-layout>
                 </oj-bind-if>
@@ -235,6 +244,8 @@
             </div>
           </div>
           <div class="demo-popup-footer">
+           <!-- <oj-progress-circle id="progressCircle" value="{{progressValue}}"></oj-progress-circle>-->
+
             <oj-button id="btnCancel" on-oj-action="[[cancelListenerNewAccount]]">
               Cancel
             </oj-button>
