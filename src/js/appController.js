@@ -47,6 +47,7 @@ define(['knockout', 'ojs/ojcontext', 'ojs/ojmodule-element-utils', 'ojs/ojcorero
         { path: 'customers', detail: { label: 'Customers', iconClass: 'oj-ux-ico-contact-group' } },
         { path: 'profile', detail: { label: 'Profile', iconClass: 'oj-ux-ico-contact' } },
         { path: 'about', detail: { label: 'About', iconClass: 'oj-ux-ico-information-s' } },
+        { path: 'accountlistdetails', detail: { label: 'Account Details Page', iconClass: '' ,header:'Account List Details Page'} },
         { path: 'accountlist', detail: { label: 'Account List with out menu', iconClass: 'oj-ux-ico-bar-chart' } },
 
       ];
