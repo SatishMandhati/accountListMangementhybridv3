@@ -8,42 +8,42 @@
 /*
  * Your incidents ViewModel code goes here
  */
- 
-define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'ojs/ojcontext', 'jquery', 'ojs/ojanimation', 'ojs/ojarraydataprovider', 'text!../datacontent/data.json', 'ojs/ojasyncvalidator-regexp', 'ojs/ojknockout', 'ojs/ojinputsearch', 'ojs/ojhighlighttext',
+
+define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', 'ojs/ojcontext', 'jquery', 'ojs/ojanimation', 'ojs/ojarraydataprovider', 'text!../datacontent/data.json', 'ojs/ojasyncvalidator-regexp', 'ojs/ojknockout', 'ojs/ojinputsearch', 'ojs/ojhighlighttext',
     , 'ojs/ojpopup', 'ojs/ojlistview', 'ojs/ojlistitemlayout', 'ojs/ojradioset', 'ojs/ojbutton',
     'ojs/ojtrain', 'ojs/ojlabel', 'ojs/ojinputtext', 'ojs/ojvalidationgroup',
-    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages','ojs/ojcorerouter'],
+    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages', 'ojs/ojcorerouter'],
 
-  function (ko,app,moduleUtils,accUtils,Context,$,AnimationUtils, ArrayDataProvider, employeeData, AsyncRegExpValidator) {
+    function (ko, app, moduleUtils, accUtils, Context, $, AnimationUtils, ArrayDataProvider, employeeData, AsyncRegExpValidator) {
 
-    function IncidentsViewModel(params) {
-        
-      var self = this;
-      self.router = params.parentRouter;
-      // Wait until header show up to resolve
-      var resolve = Context.getPageContext().getBusyContext().addBusyState({description: "wait for header"});
-      // Header Config
-      self.headerConfig = ko.observable({'view':[], 'viewModel':null});
-      moduleUtils.createView({'viewPath':'views/header.html'}).then(function(view) {
-        self.headerConfig({'view':view, 'viewModel': app.getHeaderModel()});
-        resolve();
-      })
+        function IncidentsViewModel(params) {
 
-      // Below are a set of the ViewModel methods invoked by the oj-module component.
-      // Please reference the oj-module jsDoc for additional information.
+            var self = this;
+            self.router = params.parentRouter;
+            // Wait until header show up to resolve
+            var resolve = Context.getPageContext().getBusyContext().addBusyState({ description: "wait for header" });
+            // Header Config
+            self.headerConfig = ko.observable({ 'view': [], 'viewModel': null });
+            moduleUtils.createView({ 'viewPath': 'views/header.html' }).then(function (view) {
+                self.headerConfig({ 'view': view, 'viewModel': app.getHeaderModel() });
+                resolve();
+            })
 
-      /**
-       * Optional ViewModel method invoked after the View is inserted into the
-       * document DOM.  The application can put logic that requires the DOM being
-       * attached here.
-       * This method might be called multiple times - after the View is created
-       * and inserted into the DOM and after the View is reconnected
-       * after being disconnected.
-       */
-      self.connected = function() {
-        accUtils.announce('Incidents page loaded.', 'assertive');
-        document.title = "Incidents";
-        // Implement further logic if needed
+            // Below are a set of the ViewModel methods invoked by the oj-module component.
+            // Please reference the oj-module jsDoc for additional information.
+
+            /**
+             * Optional ViewModel method invoked after the View is inserted into the
+             * document DOM.  The application can put logic that requires the DOM being
+             * attached here.
+             * This method might be called multiple times - after the View is created
+             * and inserted into the DOM and after the View is reconnected
+             * after being disconnected.
+             */
+            self.connected = function () {
+                accUtils.announce('Incidents page loaded.', 'assertive');
+                document.title = "Incidents";
+                // Implement further logic if needed
                 this.value = ko.observable();
                 this.rawValue = ko.observable();
                 this.searchTerm = ko.observable();
@@ -58,12 +58,12 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     textFilterAttributes: [],
                 });
                 monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
-            clearFilter=document.getElementById('clear-filter');
-            clearFilter.style.display="none";
-            //clearFilter="none";
-               // self.router = params.parentRouter;
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ];
+                clearFilter = document.getElementById('clear-filter');
+                clearFilter.style.display = "none";
+                //clearFilter="none";
+                // self.router = params.parentRouter;
 
                 /*this.suggestionsDP = () => {
                    
@@ -73,7 +73,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     //this.selectedvaluelength = ko.observable("43");
 
                 };*/
-        //serach filter records
+                //serach filter records
                 this.handleValueAction = (event) => {
                     var detail = event.detail;
                     var eventTime = this._getCurrentTime();
@@ -82,7 +82,8 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         var activitiesArray3 = data.filter(element => element.OrganizationName == detail.value)
                         var result3 = JSON.stringify(activitiesArray3);
                         var obj3 = JSON.parse(result3, function (key, value) {
-                            if (key == "LastVisit" || key == "NextVisit") {                                var formateddate = monthShortNames[new Date(value).getMonth()] + ' ' + new Date(value).getDate() + '  ' + new Date(value).getFullYear();
+                            if (key == "LastVisit" || key == "NextVisit") {
+                                var formateddate = monthShortNames[new Date(value).getMonth()] + ' ' + new Date(value).getDate() + '  ' + new Date(value).getFullYear();
                                 return formateddate;
                             } else {
                                 return value;
@@ -93,7 +94,6 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     this.searchItemContext(this._trimItemContext(detail.itemContext));
                     this.previousSearchTerm(detail.previousValue);
                     this.searchTimeStamp(eventTime);
-
                 };
                 this._trimItemContext = (itemContext) => {
                     var searchItemContext = null;
@@ -114,8 +114,8 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     var date = new Date();
                     return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
                 };
-                onLoadAccountRecords = () =>{
-                    $.getJSON(url).then(function(data) {
+                onLoadAccountRecords = () => {
+                    $.getJSON(url).then(function (data) {
                         var activitiesArray2 = data.filter(element => element.SalesProfileStatus)
                         var resultData = JSON.stringify(activitiesArray2);
                         var _resultobj = JSON.parse(resultData, function (key, value) {
@@ -127,7 +127,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                             }
                         });
                         self.activityDataProvider(new ArrayDataProvider(_resultobj, { keyAttributes: 'SyncLocalId' }));
-                            });
+                    });
                 };
                 onLoadAccountRecords();
                 this.startAnimationListener = (event) => {
@@ -148,7 +148,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                 this.currentColor = ko.observable("");
                 this.name = ko.observable('Adam Fripp');
                 self.selectedvaluelength = ko.observable("");
-                self.selectedvaluetype=ko.observable("Total");
+                self.selectedvaluetype = ko.observable("Total");
                 this.applyFilterValues = () => {
                     this.selectedvalue = ko.observable("");
                     selectedvalue = this.currentColor._latestValue;
@@ -175,7 +175,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
 
                     });
                     //this.selectedvaluelength = ko.observable("43");
-                    clearFilter.style.display="block";
+                    clearFilter.style.display = "block";
 
                 };
                 this.setCurrentColorToNull = () => {
@@ -296,7 +296,7 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         return;
                     }
                 };
-      // Updating train label values
+                // Updating train label values
                 this.updateLabelText = (event) => {
                     var train = document.getElementById("train");
                     let selectedStep = train.getStep(event.detail.value);
@@ -317,9 +317,9 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     }
                 };
 
-             
 
-        //saved form data in localstorage        
+
+                //saved form data in localstorage        
                 this.saveLocalStorage = (event) => {
                     var train = document.getElementById("train");
                     let finalStep = train.getStep("stp3");
@@ -328,61 +328,63 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                         finalStep.messageType = "confirmation";
                         train.updateStep(finalStep.id, finalStep);
                     }
-                    var accoutnDataObject = { 'name': this.name._latestValue, 'email': this.email._latestValue, 'phonenumber': this.telephoneNumber._latestValue,'selectItem1':this.selectVal._latestValue,'swithvalue':this.isChecked._latestValue };
+                    var accoutnDataObject = { 'name': this.name._latestValue, 'email': this.email._latestValue, 'phonenumber': this.telephoneNumber._latestValue, 'selectItem1': this.selectVal._latestValue, 'swithvalue': this.isChecked._latestValue };
                     localStorage.setItem('accoutnDataStoreObject', JSON.stringify(accoutnDataObject));
                     var retrievedObject = localStorage.getItem('accoutnDataStoreObject');
                     console.log('retrievedObject: ', JSON.parse(retrievedObject));
                     this.name = ko.observable();
                     this.email = ko.observable();
                     this.telephoneNumber = ko.observable();
-            //Toaster
-             /*const isoTimeNow = new Date().toISOString();
-              const isoTimeYesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-              this.messages = [
-                
-                  {
-                      severity: "confirmation",
-                      summary: "saved Successfully in localstorage",
-                      timestamp: isoTimeYesterday,
-                  },
-                  {
-                      severity: "info",
-                      summary: "Info message summary no detail",
-                  },
-              ];
-              this.messagesDataprovider = new ArrayDataProvider(this.messages);*/
+                    //Toaster
+                    /*const isoTimeNow = new Date().toISOString();
+                     const isoTimeYesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                     this.messages = [
+                       
+                         {
+                             severity: "confirmation",
+                             summary: "saved Successfully in localstorage",
+                             timestamp: isoTimeYesterday,
+                         },
+                         {
+                             severity: "info",
+                             summary: "Info message summary no detail",
+                         },
+                     ];
+                     this.messagesDataprovider = new ArrayDataProvider(this.messages);*/
                     window.location.href = window.location.origin;
                 };
-  // details page link
-                openArrowListener = (event,content) => {
-                     accountname = content.data.OrganizationName;
-                     lastvisit = content.data.LastVisit;
-                     nextvisit = content.data.NextVisit;
-                
+                // details page link
+                openArrowListener = (event, content) => {
+                    accountname = content.data.OrganizationName;
+                    lastvisit = content.data.LastVisit;
+                    nextvisit = content.data.NextVisit;
+
                     // oj.Router.rootInstance.go('/dashboard');
-                  //  alert(event);
-                  //this.router.rootInstance.go({ path: 'accountlist', params: { name: 'Account List' } })
-                  //  router.go({path:'dashboard',params:{}})
-                //  router.go({path:'dashboard',params: { name: 'Dashboard' } })
+                    //  alert(event);
+                    //this.router.rootInstance.go({ path: 'accountlist', params: { name: 'Account List' } })
+                    //  router.go({path:'dashboard',params:{}})
+                    //  router.go({path:'dashboard',params: { name: 'Dashboard' } })
 
-               // router.go({path: 'dashboard', params: {name: 'Dashboard'}}
+                    // router.go({path: 'dashboard', params: {name: 'Dashboard'}}
 
-            //   self.router=oj.Router.rootInstance;
-               self.router.go({path: 'accountlistdetails', params: {
-                   "accountName": accountname,
-                   "LastVisit": lastvisit,
-                   "NextVisit": nextvisit,
-                }});
+                    //   self.router=oj.Router.rootInstance;
+                    self.router.go({
+                        path: 'accountlistdetails', params: {
+                            "accountName": accountname,
+                            "LastVisit": lastvisit,
+                            "NextVisit": nextvisit,
+                        }
+                    });
                 };
                 clearfilterAction = (event) => {
-                    clearFilter.style.display="none";
+                    clearFilter.style.display = "none";
                     window.location.href = window.location.origin;
 
                 };
                 openListener = (event) => {
                     let popup = document.getElementById("popup1");
                     popup.open("#btnGo");
-                    clearFilter.style.display="none";
+                    clearFilter.style.display = "none";
 
                 };
                 cancelListener = (event) => {
@@ -407,44 +409,44 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     options.multiple = true;
                     fields = ["displayName"];
                     navigator.contacts.find(fields, contactfindSuccess, contactfindError, options);
-                     
+
                     function contactfindSuccess(contacts) {
-                       for (var i = 0; i < contacts.length; i++) {
-                          alert("Display Name = " + contacts[i].displayName);
-                       }
+                        for (var i = 0; i < contacts.length; i++) {
+                            alert("Display Name = " + contacts[i].displayName);
+                        }
                     }
-                     
+
                     function contactfindError(message) {
-                       alert('Failed because: ' + message);
+                        alert('Failed because: ' + message);
                     }
-                     
-                 }
-               
-            
 
-      };
+                }
 
-      /**
-       * Optional ViewModel method invoked after the View is disconnected from the DOM.
-       */
-      self.disconnected = function() {
-        // Implement if needed
-      };
 
-      /**
-       * Optional ViewModel method invoked after transition to the new View is complete.
-       * That includes any possible animation between the old and the new View.
-       */
-      self.transitionCompleted = function() {
-        // Implement if needed
-      };
+
+            };
+
+            /**
+             * Optional ViewModel method invoked after the View is disconnected from the DOM.
+             */
+            self.disconnected = function () {
+                // Implement if needed
+            };
+
+            /**
+             * Optional ViewModel method invoked after transition to the new View is complete.
+             * That includes any possible animation between the old and the new View.
+             */
+            self.transitionCompleted = function () {
+                // Implement if needed
+            };
+        }
+
+        /*
+         * Returns an instance of the ViewModel providing one instance of the ViewModel. If needed,
+         * return a constructor for the ViewModel so that the ViewModel is constructed
+         * each time the view is displayed.
+         */
+        return IncidentsViewModel;
     }
-
-    /*
-     * Returns an instance of the ViewModel providing one instance of the ViewModel. If needed,
-     * return a constructor for the ViewModel so that the ViewModel is constructed
-     * each time the view is displayed.
-     */
-    return IncidentsViewModel;
-  }
 );
