@@ -12,13 +12,14 @@
 define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'ojs/ojcontext', 'jquery', 'ojs/ojanimation', 'ojs/ojarraydataprovider', 'text!../datacontent/data.json', 'ojs/ojasyncvalidator-regexp', 'ojs/ojknockout', 'ojs/ojinputsearch', 'ojs/ojhighlighttext',
     , 'ojs/ojpopup', 'ojs/ojlistview', 'ojs/ojlistitemlayout', 'ojs/ojradioset', 'ojs/ojbutton',
     'ojs/ojtrain', 'ojs/ojlabel', 'ojs/ojinputtext', 'ojs/ojvalidationgroup',
-    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages'],
+    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages','ojs/ojcorerouter'],
 
   function (ko,app,moduleUtils,accUtils,Context,$,AnimationUtils, ArrayDataProvider, employeeData, AsyncRegExpValidator) {
 
-    function IncidentsViewModel() {
+    function IncidentsViewModel(params) {
+        
       var self = this;
-
+      self.router = params.parentRouter;
       // Wait until header show up to resolve
       var resolve = Context.getPageContext().getBusyContext().addBusyState({description: "wait for header"});
       // Header Config
@@ -353,12 +354,25 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                     window.location.href = window.location.origin;
                 };
   // details page link
-                openArrowListener = (event) => {
+                openArrowListener = (event,content) => {
+                     accountname = content.data.OrganizationName;
+                     lastvisit = content.data.LastVisit;
+                     nextvisit = content.data.NextVisit;
+                
                     // oj.Router.rootInstance.go('/dashboard');
                   //  alert(event);
-                  this.router.rootInstance.go({ path: 'accountlist', params: { name: 'Account List' } })
+                  //this.router.rootInstance.go({ path: 'accountlist', params: { name: 'Account List' } })
                   //  router.go({path:'dashboard',params:{}})
                 //  router.go({path:'dashboard',params: { name: 'Dashboard' } })
+
+               // router.go({path: 'dashboard', params: {name: 'Dashboard'}}
+
+            //   self.router=oj.Router.rootInstance;
+               self.router.go({path: 'accountlistdetails', params: {
+                   "accountName": accountname,
+                   "LastVisit": lastvisit,
+                   "NextVisit": nextvisit,
+                }});
                 };
                 clearfilterAction = (event) => {
                     clearFilter.style.display="none";
@@ -382,7 +396,29 @@ define(['knockout', 'appController','ojs/ojmodule-element-utils','accUtils', 'oj
                 cancelListenerNewAccount = (event) => {
                     let popup = document.getElementById("popup2");
                     popup.close();
-                }
+                };
+                importContact = (event) => {
+                    findContacts();
+                };
+
+                function findContacts() {
+                    var options = new ContactFindOptions();
+                    options.filter = "";
+                    options.multiple = true;
+                    fields = ["displayName"];
+                    navigator.contacts.find(fields, contactfindSuccess, contactfindError, options);
+                     
+                    function contactfindSuccess(contacts) {
+                       for (var i = 0; i < contacts.length; i++) {
+                          alert("Display Name = " + contacts[i].displayName);
+                       }
+                    }
+                     
+                    function contactfindError(message) {
+                       alert('Failed because: ' + message);
+                    }
+                     
+                 }
                
             
 
