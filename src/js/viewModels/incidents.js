@@ -243,6 +243,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                 this.selectedStepLabel = ko.observable("Basic Information");
                 this.selectedStepFormLabel = ko.observable("Name");
                 this.selectedStepFormaddress = ko.observable("");
+                this.phoneselectednumber = ko.observable("");
+
                 this.name = ko.observable();
                 this.email = ko.observable();
                 this.telephoneNumber = ko.observable();
@@ -460,7 +462,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                     popup.close();
                 };
                 importContact = (event) => {
-                    findContacts();
+                    //findContacts();
+                    pickContacts();
                 };
 
                 function findContacts() {
@@ -485,7 +488,26 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
 
 
             };
+            function pickContacts() {
 
+                navigator.contacts.pickContact(function (contact) {
+                    //alert('The following contact has been selected:' + JSON.stringify(contact));
+                    selectedContact = JSON.parse(JSON.stringify(contact));
+
+                    // alert("contacts: "+selectedContact);
+
+                    alert("selected phone number: " + selectedContact.phoneNumbers[0].value);
+
+                    //selectedStepFormaddress="ddd";
+
+                    // this.phoneselectednumber = ko.observable('saaaaa');
+
+                }, function (err) {
+                    alert('Error: ' + err);
+                    //this.phoneselectednumber = ko.observable('saaaaa');
+
+                });
+            };
             /**
              * Optional ViewModel method invoked after the View is disconnected from the DOM.
              */
