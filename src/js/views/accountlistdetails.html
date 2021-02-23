@@ -3,33 +3,48 @@
  Licensed under The Universal Permissive License (UPL), Version 1.0
  as shown at https://oss.oracle.com/licenses/upl/
  -->
- <div class="oj-hybrid-applayout-page">
+<div class="oj-hybrid-applayout-page">
     <div class="oj-applayout-fixed-top">
         <!--
          ** Oracle JET V10.0.0 hybrid mobile application header pattern.
          ** Please see the Oracle JET Cookbook App Shell: Hybrid Mobile demos for
          ** more information on how to use this pattern.
       -->
-      <header role="banner" class="oj-hybrid-applayout-header">
-        <oj-module config="[[headerConfig]]"></oj-module>
-      </header>
+        <header role="banner" class="oj-hybrid-applayout-header">
+            <oj-module config="[[headerConfig]]"></oj-module>
+        </header>
     </div>
     <!-- This is where your main page content will be loaded -->
     <div class="oj-applayout-content">
-      <div role="main" class="oj-hybrid-applayout-content">
-        <div class="oj-hybrid-padding">
-            <div class="oj-flex-bar oj-sm-justify-content-flex-end oj-sm-margin-5x-end">
-                <oj-button on-oj-action="[[gotoaccoutntDetails]]" class='demo-button-purple' chroming='solid'>
-                 Go to Back 
-                 </oj-button>
-              </div>
-<h1>Account Details</h1>
-              <p><oj-bind-text value="[[accountname]]"></oj-bind-text></p>
-              <p><oj-bind-text value="[[lastvisit]]"></oj-bind-text></p>
-              <p><oj-bind-text value="[[nextvisit]]"></oj-bind-text></p>
+        <div role="main" class="oj-hybrid-applayout-content">
+            <div class="oj-hybrid-padding">
+                <div class="oj-flex-bar oj-sm-justify-content-flex-end oj-sm-margin-5x-end">
+                    <oj-button on-oj-action="[[gotoaccoutntDetails]]" class='demo-button-purple' chroming='solid'>
+                        Go to Back
+                    </oj-button>
+                </div>
 
-        <accountlist-details-view></accountlist-details-view>
+
+                <div class="oj-panel oj-panel-shadow-lg oj-sm-margin-4x demo-panel-customizations"
+                    style="width:320px;height:400px;color:#367588">
+                    <h4><u>Account Details</u></h4>
+                    <p>
+                        <b>Organization Name : </b>
+                        <oj-bind-text value="[[accountname]]"></oj-bind-text>
+                    </p>
+                    <p>
+                        <b>Last Visit : </b>
+                        <oj-bind-text value="[[lastvisit]]"></oj-bind-text>
+                    </p>
+                    <p>
+                        <b>Next Visit : </b>
+                        <oj-bind-text value="[[nextvisit]]"></oj-bind-text>
+                    </p>
+                </div>
+
+
+                <accountlist-details-view></accountlist-details-view>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
