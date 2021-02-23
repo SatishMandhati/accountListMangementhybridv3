@@ -12,7 +12,7 @@
 define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', 'ojs/ojcontext', 'jquery', 'ojs/ojanimation', 'ojs/ojarraydataprovider', 'text!../datacontent/data.json', 'ojs/ojasyncvalidator-regexp', 'ojs/ojknockout', 'ojs/ojinputsearch', 'ojs/ojhighlighttext',
     , 'ojs/ojpopup', 'ojs/ojlistview', 'ojs/ojlistitemlayout', 'ojs/ojradioset', 'ojs/ojbutton',
     'ojs/ojtrain', 'ojs/ojlabel', 'ojs/ojinputtext', 'ojs/ojvalidationgroup',
-    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages', 'ojs/ojcorerouter'],
+    'ojs/ojlabelvalue', 'ojs/ojinputtext', 'ojs/ojselectsingle', 'ojs/ojformlayout', 'ojs/ojswitch', 'accountlist-details/loader', 'ojs/ojcore', 'ojs/ojrouter', 'ojs/ojmessages', 'ojs/ojcorerouter', 'ojs/ojmessages', 'ojs/ojprogress-circle'],
 
     function (ko, app, moduleUtils, accUtils, Context, $, AnimationUtils, ArrayDataProvider, employeeData, AsyncRegExpValidator) {
 
@@ -318,7 +318,10 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                 };
 
 
-
+                this.buttonDisplay = ko.observable("none");
+                this.loadingText = ko.observable("Loading...");
+                this.progressValue = ko.observable(0);
+                //document.getElementById('progressCircle').style.display="none";
                 //saved form data in localstorage        
                 this.saveLocalStorage = (event) => {
                     var train = document.getElementById("train");
@@ -335,6 +338,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                     this.name = ko.observable();
                     this.email = ko.observable();
                     this.telephoneNumber = ko.observable();
+                    //   document.getElementById('progressCircle').style.display="block";
+
                     //Toaster
                     /*const isoTimeNow = new Date().toISOString();
                      const isoTimeYesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
@@ -351,8 +356,63 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                          },
                      ];
                      this.messagesDataprovider = new ArrayDataProvider(this.messages);*/
+
+                    const isoTimeNow = new Date().toISOString();
+                    const isoTimeYesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                    self.messages = [
+                        {
+                            severity: "error",
+                            summary: "Error message summary",
+                            detail: "Error message detail",
+                            timestamp: isoTimeNow,
+                        },
+                        {
+                            severity: "warning",
+                            summary: "Warning message summary",
+                            detail: "Warning message detail",
+                        },
+                        {
+                            severity: "confirmation",
+                            summary: "Confirmation message summary no detail",
+                            timestamp: isoTimeYesterday,
+                        },
+                        {
+                            severity: "info",
+                            summary: "Info message summary no detail",
+                        },
+                        {
+                            severity: "none",
+                            summary: "Message summary no detail",
+                        },
+                    ];
+                    //  alert("Data Saved Succesfully in local storage")
+                    // messagesDataprovider = new ArrayDataProvider(self.messages);
+                    // this.progressValue(0);
+                    // this.buttonDisplay("none");
+                    // this.loadingText("");
                     window.location.href = window.location.origin;
                 };
+                /*  this.progressValue.subscribe((newValue) => {
+                      if (newValue === 100) {
+                          let loadingRegion = document.getElementById("loadingRegion");
+                         // loadingRegion.removeAttribute("aria-busy");
+                        //  loadingRegion.removeAttribute("aria-describedby");
+                          this.loadingText("Data Saved Successfully in Local Storage!");
+                          this.buttonDisplay("inline-flex");
+                         
+                         
+                         // document.getElementById('progressCircle').style.display="none";
+                          //setTimeout(function(){
+                              window.location.href = window.location.origin;
+  
+                         // },1000);
+                      }
+                  });
+                  window.setInterval(() => {
+                      {
+                          this.progressValue(Math.min(this.progressValue() + 1, 100));
+                      }
+                  }, 30);*/
                 // details page link
                 openArrowListener = (event, content) => {
                     accountname = content.data.OrganizationName;
@@ -412,12 +472,12 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
 
                     function contactfindSuccess(contacts) {
                         for (var i = 0; i < contacts.length; i++) {
-                            alert("Display Name = " + contacts[i].displayName);
+                            console.log("Display Name = " + contacts[i].displayName);
                         }
                     }
 
                     function contactfindError(message) {
-                        alert('Failed because: ' + message);
+                        console.log('Failed because: ' + message);
                     }
 
                 }
