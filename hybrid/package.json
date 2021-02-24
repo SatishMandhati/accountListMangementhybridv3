@@ -17,7 +17,12 @@
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-contacts": {},
+      "cordova-plugin-cleartext": {},
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      }
     },
     "platforms": [
       "android",
@@ -26,6 +31,9 @@
   },
   "dependencies": {
     "cordova-android": "9.0.0",
-    "cordova-browser": "6.0.0"
+    "cordova-browser": "6.0.0",
+    "cordova-plugin-cleartext": "1.0.0",
+    "cordova-plugin-contacts": "3.0.1",
+    "cordova-plugin-geolocation": "4.1.0"
   }
 }
