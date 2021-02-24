@@ -188,11 +188,10 @@
               <oj-train id="train" class="oj-train-stretch" on-selected-step-changed="[[updateLabelText]]"
                 on-oj-before-select="[[validate]]" selected-step="{{selectedStepValue}}" steps="[[stepArray]]">
               </oj-train>
-              <div class="oj-sm-margin-4x-vertical">
-                <h3 class="oj-header-border" style="color:#367588 ;">
-                  <oj-bind-text value="[[selectedStepLabel()]]"></oj-bind-text>
-                </h3>
-              </div>
+              <h6 class="oj-header-border" style="color:#367588 ;">
+                <oj-bind-text value="[[selectedStepLabel()]]"></oj-bind-text>
+              </h6>
+
               <oj-label label-id="grouplabelid" style="color:#367588 ;">
                 <oj-bind-text value="[[selectedStepFormLabel()]]"></oj-bind-text>
               </oj-label>
@@ -204,14 +203,24 @@
                     </oj-input-text>
                     <oj-select-single data="[[browsersDP]]" label-hint="Select Item" style="color:#367588 ;">
                     </oj-select-single>
-                    <oj-select-single data="[[browsersDP2]]" label-hint="Select Item" style="color:#367588 ;">
-                    </oj-select-single>
+                    <!--<oj-select-single data="[[browsersDP2]]" label-hint="Select Item" style="color:#367588 ;">
+                    </oj-select-single>-->
                     <oj-radioset id="rowDirectionEnabledRadioset" value="laptop" style="color:#367588 ;"
                       class='oj-choice-direction-row' label-hint="Class">
                       <oj-option value="wholeSale">WholeSale</oj-option>
                       <oj-option value="wholesaleretail">Wholesale-Retail</oj-option>
                       <oj-option value="retail">Retail</oj-option>
                     </oj-radioset>
+                    <p><b>Latitude : </b>
+                      <oj-bind-text value="[[gpslatitude]]"></oj-bind-text>
+                      <b> Langitude :</b>
+                      <oj-bind-text value="[[gpslangitude]]"></oj-bind-text>
+                    </p>
+                    <oj-button id="getPosition" class="oj-flex-bar-start demo-button-purple" chroming='solid'
+                      on-oj-action="[[currntPositionAction]]">
+                      GPS Coordinates
+                    </oj-button>
+                    <!-- <div id="map-canvas" style="height:100px;width:100px;border:1px solid red"></div>-->
                   </oj-form-layout>
                 </oj-bind-if>
                 <oj-bind-if test="[[selectedStepValue() === 'stp2'|| selectedStepValue() === 'stp3']]">
@@ -232,12 +241,12 @@
                     <!--<oj-input-text  id="phoneselectedvalue" value="{{phoneselectednumber}}" >
                   </oj-input-text>-->
 
-                
-                  <p id="last" class="bold">selected phone number:
-                  <span id="results">
-                    <oj-bind-text value="[[choosephonenumber]]"></oj-bind-text>
-                  </span>
-                  </p>
+
+                    <p id="last" class="bold">selected phone number:
+                      <span id="results">
+                        <oj-bind-text value="[[choosephonenumber]]"></oj-bind-text>
+                      </span>
+                    </p>
                     <oj-switch label-hint="contact status"></oj-switch>
 
                   </oj-form-layout>
