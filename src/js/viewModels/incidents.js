@@ -150,7 +150,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                 self.selectedvaluelength = ko.observable("");
                 self.selectedvaluetype = ko.observable("Total");
                 self.choosephonenumber = ko.observable("");
-
+                self.gpslatitude = ko.observable("");
+                self.gpslangitude = ko.observable("");
                 this.applyFilterValues = () => {
                     this.selectedvalue = ko.observable("");
                     selectedvalue = this.currentColor._latestValue;
@@ -389,7 +390,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                             summary: "Message summary no detail",
                         },
                     ];
-                     alert("Data Saved Succesfully")
+                    alert("Data Saved Succesfully")
                     // messagesDataprovider = new ArrayDataProvider(self.messages);
                     // this.progressValue(0);
                     // this.buttonDisplay("none");
@@ -398,6 +399,54 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                     window.location.reload(true);
 
                 };
+
+                this.currntPositionAction = (event) => {
+                    var options = {
+                        enableHighAccuracy: true,
+                        maximumAge: 3600000
+                    }
+                    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+
+                    function onSuccess(position) {
+                        self.gpslatitude(position.coords.latitude);
+                        self.gpslangitude(position.coords.longitude);
+                        /* alert('Latitude: '          + position.coords.latitude          + '\n' +
+                            'Longitude: '         + position.coords.longitude         + '\n' +
+                            'Altitude: '          + position.coords.altitude          + '\n' +
+                            'Accuracy: '          + position.coords.accuracy          + '\n' +
+                            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+                            'Heading: '           + position.coords.heading           + '\n' +
+                            'Speed: '             + position.coords.speed             + '\n' +
+                            'Timestamp: '         + position.timestamp                + '\n');*/
+                    };
+
+                    function onError(error) {
+                        alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+                    }
+                };
+                /*  this.watchPositionAction = (event) => {
+                           var options = {
+                               maximumAge: 3600000,
+                               timeout: 3000,
+                               enableHighAccuracy: true,
+                            }
+                            var watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+                         
+                            function onSuccess(position) {
+                               alert('Latitude: '          + position.coords.latitude          + '\n' +
+                                  'Longitude: '         + position.coords.longitude         + '\n' +
+                                  'Altitude: '          + position.coords.altitude          + '\n' +
+                                  'Accuracy: '          + position.coords.accuracy          + '\n' +
+                                  'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+                                  'Heading: '           + position.coords.heading           + '\n' +
+                                  'Speed: '             + position.coords.speed             + '\n' +
+                                  'Timestamp: '         + position.timestamp                + '\n');
+                            };
+                         
+                            function onError(error) {
+                               alert('code: '    + error.code    + '\n' +'message: ' + error.message + '\n');
+                            }
+                       };*/
                 /*  this.progressValue.subscribe((newValue) => {
                       if (newValue === 100) {
                           let loadingRegion = document.getElementById("loadingRegion");
@@ -490,6 +539,36 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
 
                 }
 
+                var storeObj = JSON.parse(window.localStorage.accoutnDataStoreObject);
+                var storename = storeObj.name;
+                // alert(storename);
+
+                navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+                    timeout: 30000
+                });
+
+                function onSuccess(position) {
+                    var lat = position.coords.latitude;
+                    var lang = position.coords.longitude;
+
+                    //Google Maps
+                    var myLatlng = new google.maps.LatLng(lat, lang);
+                    var mapOptions = {
+                        zoom: 4,
+                        center: myLatlng
+                    }
+                    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        map: map
+                    });
+                }
+
+                function onError(error) {
+                    alert('code: ' + error.code + '\n' +
+                        'message: ' + error.message + '\n');
+                }
+                google.maps.event.addDomListener(window, 'load', onSuccess);
 
 
             };
@@ -504,7 +583,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                     console.log("selected phone number: " + selectedContact.phoneNumbers[0].value);
 
                     //selectedStepFormaddress="ddd";
-                   // this.phoneselectednumber = ko.observable("Green");
+                    // this.phoneselectednumber = ko.observable("Green");
                     self.choosephonenumber(selectedContact.phoneNumbers[0].value);
                     /// this.phoneselectednumber = ko.observable('saaaaa');
 
@@ -513,6 +592,9 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                     //this.phoneselectednumber = ko.observable('saaaaa');
 
                 });
+
+
+
             };
             /**
              * Optional ViewModel method invoked after the View is disconnected from the DOM.
