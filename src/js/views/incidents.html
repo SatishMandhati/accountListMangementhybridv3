@@ -231,6 +231,13 @@
                     </oj-button>
                     <!--<oj-input-text  id="phoneselectedvalue" value="{{phoneselectednumber}}" >
                   </oj-input-text>-->
+
+                
+                  <p id="last" class="bold">selected phone number:
+                  <span id="results">
+                    <oj-bind-text value="[[choosephonenumber]]"></oj-bind-text>
+                  </span>
+                  </p>
                     <oj-switch label-hint="contact status"></oj-switch>
 
                   </oj-form-layout>
@@ -238,10 +245,10 @@
               </oj-validation-group>
               <oj-bind-if test="[[selectedStepValue() === 'stp3']]">
 
-                <div id="loadingRegion" aria-busy="true" aria-describedby="progressCircle">
+                <!--<div id="loadingRegion" aria-busy="true" aria-describedby="progressCircle">
                   <oj-bind-text value="[[loadingText]]"></oj-bind-text>
                 </div>
-                <oj-progress-circle id="progressCircle" value="{{progressValue}}"></oj-progress-circle>
+                <oj-progress-circle id="progressCircle" value="{{progressValue}}"></oj-progress-circle>-->
 
                 <div class="oj-flex-bar oj-sm-margin-4x-vertical">
                   <oj-button id="confirmBtn" class="oj-flex-bar-end demo-button-purple" chroming='solid'
