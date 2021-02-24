@@ -149,6 +149,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                 this.name = ko.observable('Adam Fripp');
                 self.selectedvaluelength = ko.observable("");
                 self.selectedvaluetype = ko.observable("Total");
+                self.choosephonenumber = ko.observable("");
+
                 this.applyFilterValues = () => {
                     this.selectedvalue = ko.observable("");
                     selectedvalue = this.currentColor._latestValue;
@@ -387,12 +389,14 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                             summary: "Message summary no detail",
                         },
                     ];
-                    //  alert("Data Saved Succesfully in local storage")
+                     alert("Data Saved Succesfully")
                     // messagesDataprovider = new ArrayDataProvider(self.messages);
                     // this.progressValue(0);
                     // this.buttonDisplay("none");
                     // this.loadingText("");
                     window.location.href = window.location.origin;
+                    window.location.reload(true);
+
                 };
                 /*  this.progressValue.subscribe((newValue) => {
                       if (newValue === 100) {
@@ -441,6 +445,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
                 clearfilterAction = (event) => {
                     clearFilter.style.display = "none";
                     window.location.href = window.location.origin;
+                    window.location.reload(true);
 
                 };
                 openListener = (event) => {
@@ -496,11 +501,12 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils', '
 
                     // alert("contacts: "+selectedContact);
 
-                    alert("selected phone number: " + selectedContact.phoneNumbers[0].value);
+                    console.log("selected phone number: " + selectedContact.phoneNumbers[0].value);
 
                     //selectedStepFormaddress="ddd";
-
-                    // this.phoneselectednumber = ko.observable('saaaaa');
+                   // this.phoneselectednumber = ko.observable("Green");
+                    self.choosephonenumber(selectedContact.phoneNumbers[0].value);
+                    /// this.phoneselectednumber = ko.observable('saaaaa');
 
                 }, function (err) {
                     alert('Error: ' + err);
