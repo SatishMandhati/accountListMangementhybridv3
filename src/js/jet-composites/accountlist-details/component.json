@@ -5,7 +5,19 @@
   "displayName": "A user friendly, translatable name of the component.",
   "description": "A translatable high-level description for the component.",
   "properties": {
-
+    "accountname":{
+      "type": "string",
+      "writeback": true
+    },
+    "lastvisit": {
+      "type": "string",
+      "writeback": true
+    },
+    "nextvisit": {
+      "type": "string",
+      "writeback": true
+    }
+  
   },
   "methods": {
 
