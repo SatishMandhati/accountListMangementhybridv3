@@ -25,9 +25,9 @@
                 </div>
 
 
-                <div class="oj-panel oj-panel-shadow-lg oj-sm-margin-4x demo-panel-customizations"
+                <!--<div class="oj-panel oj-panel-shadow-lg oj-sm-margin-4x demo-panel-customizations"
                     style="width:320px;height:400px;color:#367588">
-                    <h4><u>Account Details</u></h4>
+                    <h4  style="color:#367588"><u>Account Details</u></h4>
                     <p>
                         <b>Organization Name : </b>
                         <oj-bind-text value="[[accountname]]"></oj-bind-text>
@@ -40,10 +40,13 @@
                         <b>Next Visit : </b>
                         <oj-bind-text value="[[nextvisit]]"></oj-bind-text>
                     </p>
-                </div>
+                </div>-->
 
-
-                <accountlist-details-view></accountlist-details-view>
+                <accountlist-details
+                accountname="[[accountname]]" 
+                lastvisit= "[[lastvisit]]"
+                nextvisit= "[[nextvisit]]"
+                ></accountlist-details>
             </div>
         </div>
     </div>
